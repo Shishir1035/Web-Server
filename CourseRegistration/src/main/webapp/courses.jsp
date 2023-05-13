@@ -39,9 +39,9 @@
 			
 			<div class="container">
 				<div class="header">
-			    <h2>Available Courses</h2>
-			    <button class="btn" onclick="showPopupForm()">Add New Course</button>
-			    <button class="btn" onclick="deleteCourse()">Delete Course</button>
+					<h2>Available Courses</h2>
+					<button class="btn" onclick="showPopupForm()">Add New Course</button>
+					<button class="btn" onclick="showDeleteForm()">Delete Course</button>
 			</div>
 
 		<div class = "course-table">
@@ -86,8 +86,41 @@
 			<input type="submit" value="Add Course" class="btn">
 			<button type="button" onclick="hidePopupForm()" class="btn">Cancel</button>
 		</form>
+		</div>
 	</div>
-	</div>
+		<div id="delete-form-background" class="popup-background">
+		  <div id="delete-form" class="popup-form">
+		    <form action="DeleteCourse" method="POST">
+		      <h2>Delete Course</h2>
+		      <label for="course_id" class="form-label">Course ID:</label>
+		      <select id="course_id" name="course_id" class="form-input">
+		        <% 
+		          try {
+		            Class.forName("com.mysql.cj.jdbc.Driver");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CourseManagement", "root", "connected");
+		            String query = "SELECT id, name FROM courses";
+		            PreparedStatement st = con.prepareStatement(query);
+		            ResultSet rs = st.executeQuery();
+		
+		            while (rs.next()) {
+		              String courseId = rs.getString("id");
+		              String courseName = rs.getString("name");
+		              %>
+		              <option value="<%= courseId %>"><%= courseId %> - <%= courseName %></option>
+		              <% 
+		            }
+		            con.close();
+		          } catch (Exception e) {
+		            e.printStackTrace();
+		          }
+		        %>
+		      </select>
+		      <input type="submit" value="Delete Course" class="btn">
+		      <button type="button" onclick="hideDeleteForm()" class="btn">Cancel</button>
+		    </form>
+		  </div>
+		</div>
+
 	<script>
 		function showPopupForm() {
 			document.getElementById("popup-background").style.display = "flex";
@@ -96,6 +129,13 @@
 		function hidePopupForm() {
 			document.getElementById("popup-background").style.display = "none";
 		}
+		  function showDeleteForm() {
+		    document.getElementById("delete-form-background").style.display = "flex";
+		  }
+		
+		  function hideDeleteForm() {
+		    document.getElementById("delete-form-background").style.display = "none";
+		  }
 	</script>
 </body>
 </html>

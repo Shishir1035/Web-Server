@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -44,18 +42,27 @@ public class AddCourse extends HttpServlet {
 	        String courseName = request.getParameter("course_name");
 	        String courseCode = request.getParameter("course_code");
 	        String courseCredit = request.getParameter("course_credit");
+
+	        response.setContentType("text/html");
+	        PrintWriter out = response.getWriter();
+	        out.println("<html><head><title>Form Input</title></head><body>");
+	        out.println("<h1>Form Input:</h1>");
+	        out.println("<p>name: " + courseName + "</p>");
+	        out.println("<p>code: " + courseCode + "</p>");
+	        out.println("<p>credit: " + courseCredit + "</p>");
+
+	        out.println("</body></html>");
 	        
 			try {
-				
 			    // Create a connection to your database
 			    Class.forName("com.mysql.cj.jdbc.Driver");
 			    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CourseManagement", "root", "connected");
-			    String sql = "INSERT INTO courses (id, name, credit, teacher_id) VALUES (?,?,?,?)";
+			    String sql = "INSERT INTO courses (id, name, credit) VALUES (?,?,?)";
 			    PreparedStatement statement = conn.prepareStatement(sql);
-			    statement.setString(1, courseName);
-			    statement.setString(2, courseCode);
+			    statement.setString(1, courseCode);
+			    statement.setString(2, courseName);
 			    statement.setString(3, courseCredit);
-			    statement.setString(4, "");
+//			    statement.setString(4, "");
 			    statement.executeUpdate();
 			    conn.close();
 			} catch (SQLException e) {
